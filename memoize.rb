@@ -1,6 +1,13 @@
 class Discounter
+  def initialize
+    @memory = {}
+  end
   def discount(*skus)
-    expensive_discount_calculator(*skus)
+    if @memory.has_key?(skus)
+      @memory[skus]
+    else
+      @memory[skus] = expensive_discount_calculator(*skus)
+    end
   end
 
   private
@@ -13,10 +20,10 @@ end
 
 
 d = Discounter.new
-d.discount(1,2,3)
-d.discount(1,2,3)
-d.discount(1,2,3)
-d.discount(2,3,4)
-d.discount(2,3,4)
-d.discount(2,3,4)
-d.discount(2,3,4)
+puts d.discount(1,2,3)
+puts d.discount(1,2,3)
+puts d.discount(1,2,3)
+puts d.discount(2,3,4)
+puts d.discount(2,3,4)
+puts d.discount(2,3,4)
+puts d.discount(2,3,4)
