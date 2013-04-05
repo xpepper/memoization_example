@@ -12,16 +12,23 @@ class Discounter
 end
 
 d = Discounter.new
+def memoize(object, method)
+  singleton_class = class << object; self; end
 
-def d.discount(*skus)
-  @memory ||= {}
+  singleton_class.class_eval do
+    memory ||= {}
 
-  if @memory.has_key?(skus)
-    @memory[skus]
-  else
-    @memory[skus] = super
+    define_method(method) do |*args|
+      if memory.has_key?(args)
+        memory[args]
+      else
+        memory[args] = super(*args )
+      end
+    end
   end
 end
+memoize(d, :discount)
+
 
 puts d.discount(1,2,3)
 puts d.discount(1,2,3)
