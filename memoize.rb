@@ -13,15 +13,13 @@ end
 
 def memoize(cls, method)
   Class.new(cls) do
-    def initialize
-      @memory = {}
-    end
+    memory = {}
 
     define_method(method) do |*args|
-      if @memory.has_key?(args)
-        @memory[args]
+      if memory.has_key?(args)
+        memory[args]
       else
-        @memory[args] = super(*args)
+        memory[args] = super(*args)
       end
     end
   end
