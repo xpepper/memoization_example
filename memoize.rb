@@ -11,22 +11,23 @@ class Discounter
   end
 end
 
-class MemoDiscounter < Discounter
-  def initialize
-    @memory = {}
-  end
+def memoize(cls, method)
+  Class.new(cls) do
+    def initialize
+      @memory = {}
+    end
 
-  def discount(*skus)
-    if @memory.has_key?(skus)
-      @memory[skus]
-    else
-      @memory[skus] = super
+    define_method(method) do |*args|
+      if @memory.has_key?(args)
+        @memory[args]
+      else
+        @memory[args] = super(*args)
+      end
     end
   end
 end
 
-
-d = MemoDiscounter.new
+d = memoize(Discounter, :discount).new
 puts d.discount(1,2,3)
 puts d.discount(1,2,3)
 puts d.discount(1,2,3)
