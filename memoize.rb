@@ -1,15 +1,18 @@
-# Rewrite using modules
+# Rewrite using bind
 module Memoize
   def remember(method)
-    original_method = "_original_#{method}".to_sym
-    alias_method original_method, method.to_sym
+    # get the original method from the target class
+    original_method = instance_method(method)
 
     memory ||= {}
     define_method(method) do |*args|
       if memory.has_key?(args)
         memory[args]
       else
-        memory[args] = send(original_method, *args)
+        # attach the original method to the instance
+        bound_method = original_method.bind(self)
+        # execute the original method
+        memory[args] = bound_method.call(*args)
       end
     end
   end
