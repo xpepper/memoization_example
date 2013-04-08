@@ -1,7 +1,18 @@
+# Rewrite using modules
+module Memoize
+  def remember(method)
+
+  end
+end
+
 class Discounter
+  extend Memoize
+
   def discount(*skus)
     expensive_discount_calculator(*skus)
   end
+
+  remember :discount
 
   private
 
@@ -11,20 +22,20 @@ class Discounter
   end
 end
 
-class Discounter
-  alias_method :_old_discount_, :discount
+# class Discounter
+#   alias_method :_old_discount_, :discount
 
-  def discount(*args)
-    @memory ||= {}
+#   def discount(*args)
+#     @memory ||= {}
 
-    if @memory.has_key?(args)
-      @memory[args]
-    else
-      @memory[args] = _old_discount_(*args)
-    end
+#     if @memory.has_key?(args)
+#       @memory[args]
+#     else
+#       @memory[args] = _old_discount_(*args)
+#     end
 
-  end
-end
+#   end
+# end
 
 d = Discounter.new
 
