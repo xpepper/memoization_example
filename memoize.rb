@@ -1,6 +1,8 @@
-# Rewrite using bind
+# using a DSL
 module Memoize
-  def remember(method)
+  def remember(method, &block)
+    define_method method, &block
+
     # get the original method from the target class
     original_method = instance_method(method)
 
@@ -15,17 +17,16 @@ module Memoize
         memory[args] = bound_method.call(*args)
       end
     end
+
   end
 end
 
 class Discounter
   extend Memoize
 
-  def discount(*skus)
+  remember :discount do |*skus|
     expensive_discount_calculator(*skus)
   end
-
-  remember :discount
 
   private
 
