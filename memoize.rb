@@ -1,7 +1,17 @@
 # Rewrite using modules
 module Memoize
   def remember(method)
+    original_method = "_original_#{method}".to_sym
+    alias_method original_method, method.to_sym
 
+    memory ||= {}
+    define_method(method) do |*args|
+      if memory.has_key?(args)
+        memory[args]
+      else
+        memory[args] = send(original_method, *args)
+      end
+    end
   end
 end
 
